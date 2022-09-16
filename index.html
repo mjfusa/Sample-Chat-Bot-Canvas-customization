@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+
+
+  <title>Mike Francis - Developing Apps - Microsoft 365, Windows, React Native</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="keywords" content="windows">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mike Francis - Developing Apps - Microsoft 365, Windows, React Native">
+  <meta property="og:url" content="http://www.mjfnet.com/index.html">
+  <meta property="og:site_name" content="Mike Francis - Developing Apps - Microsoft 365, Windows, React Native">
+  <meta property="og:locale" content="default">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Mike Francis - Developing Apps - Microsoft 365, Windows, React Native">
+
+  <link rel="alternate" href="/atom.xml" title="Mike Francis - Developing Apps - Microsoft 365, Windows, React Native"
+    type="application/atom+xml">
+
+
+  <link rel="icon" href="/favicon.png">
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  <link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+</head>
+
+<body>
+  <style>
+    .open-button {
+      background-color: green;
+      color: white;
+      padding: 5px 5px;
+      border: none;
+      cursor: pointer;
+      opacity: 0.8;
+      position: fixed;
+      bottom: 23px;
+      right: 28px;
+      width: 280px;
+    }
+
+    .closePopUp {
+      display: block;
+      position: fixed;
+      bottom: 417px;
+      right: 27px;
+      border: 2px solid #f1f1f1;
+      z-index: 99;
+      width: 30px;
+      height: 30px;
+      background-color: transparent;
+      color: #f1f1f1;
+    }
+
+    /* The popup chat - hidden by default */
+    .chat-popup {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      right: 15px;
+      border: 3px solid #f1f1f1;
+      z-index: 9;
+      height: 450px;
+    }
+  </style>
+
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+        <div id="banner"></div>
+        <div id="header-outer" class="outer">
+          <div id="header-title" class="inner">
+            <h1 id="logo-wrap">
+              <a href="/" id="logo">Mike Francis - Developing Apps - Microsoft 365, Windows, React Native</a>
+            </h1>
+
+          </div>
+          <div id="header-inner" class="inner">
+            <nav id="main-nav">
+              <a id="main-nav-toggle" class="nav-icon"></a>
+
+              <a class="main-nav-link" href="/">Home</a>
+
+              <a class="main-nav-link" href="/archives">Archives</a>
+
+            </nav>
+            <nav id="sub-nav">
+
+              <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+
+              <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+            </nav>
+            <div id="search-form-wrap">
+              <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input
+                  type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit"
+                  class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch"
+                  value="http://www.mjfnet.com"></form>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="outer">
+        <section id="main">
+
+          <article id="post-How-to-detect-if-a-Microsoft-Store-app-is-Installed"
+            class="h-entry article article-type-post" itemprop="blogPost" itemscope
+            itemtype="https://schema.org/BlogPosting">
+            <div class="article-meta">
+              <a href="/2019/11/15/How-to-detect-if-a-Microsoft-Store-app-is-Installed/" class="article-date">
+                <time class="dt-published" datetime="2019-11-15T17:28:24.000Z"
+                  itemprop="datePublished">2019-11-15</time>
+              </a>
+
+              <div class="article-category">
+                <a class="article-category-link" href="/categories/Developer/">Developer</a>
+              </div>
+
+            </div>
+            <div class="article-inner">
+
+
+              <header class="article-header">
+
+
+                <h1 itemprop="name">
+                  <a class="p-name article-title"
+                    href="/2019/11/15/How-to-detect-if-a-Microsoft-Store-app-is-Installed/">How to detect if a Microsoft
+                    Store app is Installed</a>
+                </h1>
+
+
+              </header>
+
+              <div class="e-content article-entry" itemprop="articleBody">
+
+                <img src="/2019/11/15/How-to-detect-if-a-Microsoft-Store-app-is-Installed/microsoftstore.png"
+                  title="Microsoft Store">
+                <p>There may be times when you need to determine if an Microsoft Store app has been installed. You may
+                  have a dependency on that app or otherwise need to take action based on the presence of that app.</p>
+                <h2 id="FindPackageForUser"><a href="#FindPackageForUser" class="headerlink"
+                    title="FindPackageForUser"></a>FindPackageForUser</h2>
+                <p>The API <a
+                    href="https://docs.microsoft.com/en-us/uwp/api/windows.management.deployment.packagemanager.findpackageforuser"
+                    target="_blank" rel="noopener">PackageManager.FindPackageForUser()</a> can do this. See the code
+                  below. Note the special handling for the various error conditions. This API returns a <em>Package</em>
+                  object if the app is installed for the current user. The API will throw an <strong>Access
+                    denied</strong> exception if 1) the app is not installed on the machine or 2) if is on the machine
+                  but not installed for the current user. The API will throw an <strong>Argument</strong> exception if
+                  the string for the package family name is not in the correct format.</p>
+                <figure class="highlight csharp">
+                  <table>
+                    <tr>
+                      <td class="gutter">
+                        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre>
+                      </td>
+                      <td class="code">
+                        <pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">IsAppAlreadyInstalled</span>(<span class="params"><span class="keyword">string</span> FullPackageFamilyName</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> oPkgManager = <span class="keyword">new</span> PackageManager();</span><br><span class="line">    <span class="keyword">bool</span> result = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//If 1st parameter is string.Empty, the packages are retrieved for the current user.</span></span><br><span class="line">        Package oPkg = oPkgManager.FindPackageForUser(<span class="keyword">string</span>.Empty, FullPackageFamilyName);</span><br><span class="line">        result = oPkg != <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (ArgumentException syse)</span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">"Parameter Exception: Check Package full name argument for correct pattern. X.a_N.X.X.0x64__N"</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (UnauthorizedAccessException syse)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">string</span>.IsNullOrEmpty(syse.Message))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (syse.Message.IndexOf(<span class="string">"Access is denied"</span>, StringComparison.CurrentCulture) &gt;= <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                Debug.WriteLine(<span class="string">"Access denied"</span>);</span><br><span class="line">                <span class="keyword">return</span> result;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">string</span>.IsNullOrEmpty(ex.Message))</span><br><span class="line">            Debug.WriteLine(<span class="string">@"Exception: &#123;0&#125;"</span>, ex.Message);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Button_Click</span>(<span class="params"><span class="keyword">object</span> sender, RoutedEventArgs e</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Sample code: This should return 'access denied' since this will not exist on your machine</span></span><br><span class="line">    <span class="keyword">var</span> res = IsAppAlreadyInstalled(<span class="string">"57012MikeFrancis.TrialTest123_1.66.5.0_x64__08pddan6qgabc"</span>);</span><br><span class="line">&#125;</span><br></pre>
+                      </td>
+                    </tr>
+                  </table>
+                </figure>
+                <h2 id="Full-App-Package-Name"><a href="#Full-App-Package-Name" class="headerlink"
+                    title="Full App Package Name"></a>Full App Package Name</h2>
+                <p>You need the full package name in order to call FindPackageForUser(). To get a list of all of
+                  packages currently installed, you can use the PowerShell command <a
+                    href="https://docs.microsoft.com/en-us/powershell/module/appx/get-appxpackage?view=win10-ps"
+                    target="_blank" rel="noopener"><code>Get-AppxPackage</code></a>. </p>
+                <img src="/2019/11/15/How-to-detect-if-a-Microsoft-Store-app-is-Installed/GetAppxPackage.png"
+                  title="GetAppxPackage - partial list">
+                <p>For Microsoft Store apps that you have published, you can get the full package family name from the
+                  <strong>App Identity</strong> page in Partner Center. See screenshot below.<br><img
+                    src="/2019/11/15/How-to-detect-if-a-Microsoft-Store-app-is-Installed/PackageFamilyName-AppIdentity.png"
+                    title="Full Package Family Name - Partner Center"></p>
+                <p>Please let me how this method works for you or if you have another solution for determining the
+                  installation status of an app on Windows 10.</p>
+                <p>Code available <a href="https://gist.github.com/mjfusa/6935cf8b38a9330ef54b7b899c3dedaf"
+                    target="_blank" rel="noopener">here</a>.</p>
+                <p><a href="http://www.twitter.com/mikefrancis" target="_blank"
+                    rel="noopener"><code>@MikeFrancis</code></a></p>
+
+
+              </div>
+              <footer class="article-footer">
+                <a data-url="http://www.mjfnet.com/2019/11/15/How-to-detect-if-a-Microsoft-Store-app-is-Installed/"
+                  data-id="ck3evg1nz0004csiw7eoci9q2" data-title="How to detect if a Microsoft Store app is Installed"
+                  class="article-share-link">Share</a>
+
+                <a href="http://www.mjfnet.com/2019/11/15/How-to-detect-if-a-Microsoft-Store-app-is-Installed/#disqus_thread"
+                  class="article-comment-link">Comments</a>
+
+
+
+                <ul class="article-tag-list">
+                  <li class="article-tag-list-item"><a class="article-tag-list-link"
+                      href="/tags/MSIX-UWP-PackageManager/">MSIX, UWP, PackageManager</a></li>
+                </ul>
+
+              </footer>
+            </div>
+
+          </article>
+
+
+
+
+          <article id="post-A-Zero-Inbox-Solution" class="h-entry article article-type-post" itemprop="blogPost"
+            itemscope itemtype="https://schema.org/BlogPosting">
+            <div class="article-meta">
+              <a href="/2019/01/10/A-Zero-Inbox-Solution/" class="article-date">
+                <time class="dt-published" datetime="2019-01-10T16:48:34.000Z"
+                  itemprop="datePublished">2019-01-10</time>
+              </a>
+
+              <div class="article-category">
+                <a class="article-category-link" href="/categories/Productivity/">Productivity</a>
+              </div>
+
+            </div>
+            <div class="article-inner">
+
+
+              <header class="article-header">
+
+
+                <h1 itemprop="name">
+                  <a class="p-name article-title" href="/2019/01/10/A-Zero-Inbox-Solution/">A Zero Inbox Solution</a>
+                </h1>
+
+
+              </header>
+
+              <div class="e-content article-entry" itemprop="articleBody">
+
+                <p>Many of us in the software development business rely on email as our primary means of communication.
+                  Email is great – allowing us to prioritize and document our work. 90% of my job as a consultant
+                  involves email.</p>
+                <h2 id="IF-IT-HURTS-DON’T-DO-IT"><a href="#IF-IT-HURTS-DON’T-DO-IT" class="headerlink"
+                    title="IF IT HURTS, DON’T DO IT"></a>IF IT HURTS, DON’T DO IT</h2>
+                <p>I took a ‘Productivity course’ a couple of years ago around optimizing the use of email. This
+                  technique involved categorizing or tagging your email using the Outlook ‘Categories’ feature. Here is
+                  a blog post that discusses a similar process. I tried using this method, and found that for me, it
+                  added too much overhead – categorizing everything was a chore and I did not see much return on the
+                  effort. Also, the whole system falls apart if you don’t explicitly categorize. I found I was missing
+                  some emails and therefore not seeing them in my Outlook Tasks list – per the course guidelines.</p>
+                <p>As the PM for outlook.com recently said, there are two types of people that use email: pilers and
+                  filers. Pilers use one folder for all of their email where filers use folders to organize their email.
+                  (I’ve never understood pilers – I have seen people – and you know who you are - that literally have
+                  their lifetime of email in a single Inbox. The time it takes to find a relevant email would drive me
+                  crazy.)</p>
+                <p>I am definitely a filer — I use the ‘Rule’ feature of Outlook to automatically move the email from my
+                  Inbox to the proper folder depending on who it is from or the subject. For example, I have a rule that
+                  says, if the incoming email is from the campus dining alias (think menu of the week) the mail is moved
+                  to the ‘Campus Dining’ folder. However if an email is from the President of the company, it is moved
+                  into my Inbox – but I am getting ahead of myself. Please read on.</p>
+                <h2 id="VARYING-DEGREES-OF-IMPORTANCE"><a href="#VARYING-DEGREES-OF-IMPORTANCE" class="headerlink"
+                    title="VARYING DEGREES OF IMPORTANCE"></a>VARYING DEGREES OF IMPORTANCE</h2>
+                <p>In the above example, I think you would agree that the two sources of email have different levels of
+                  importance. That is, if I never-ever read the email from the Campus Dining alias there will minimal
+                  consequences. However, the email from the President of the company could have some very relevant
+                  information related to my job. </p>
+                <h2 id="INBOX-ACTION"><a href="#INBOX-ACTION" class="headerlink" title="INBOX = ACTION"></a>INBOX =
+                  ACTION</h2>
+                <p>The principal I use is that for a message to be in my Inbox, is that it must be actionable by me
+                  within the next 24 hours. I enforce this by setting up a rule that moves all email not addressed to me
+                  to a second inbox, I call it Inbox2. If you’re thinking I must have a lot of rules, you’d be right. I
+                  have a rule and corresponding folder for every alias I subscribe to. For some aliases that have very
+                  similar information, I’ll have multiple rules send email to that folder. The following is my ‘All’
+                  rule:</p>
+                <img src="/2019/01/10/A-Zero-Inbox-Solution/image1.png" title="Outlook rule">
+                <p>Note that this rule is the last in the rules list. This gives other rules up the list to intercept
+                  the message and move it to the proper folder.</p>
+                <h2 id="RECIPIENT-SENDER-ACTION"><a href="#RECIPIENT-SENDER-ACTION" class="headerlink"
+                    title="RECIPIENT, SENDER, ACTION"></a>RECIPIENT, SENDER, ACTION</h2>
+                <p>For an email to be sent directly to my Inbox, I have the following rules:<br>If sent directly to me —
+                  move to my Inbox. The thinking is that if someone is sending me (the recipient) email directly most
+                  likely it will have some action for me, even if just to acknowledge it. </p>
+                <p>If from the company president or my boss — move to my Inbox. The thinking here is email sent from the
+                  President or other important person will most likely be sent to an alias and not directly to me. To
+                  catch these emails, I have an explicit rule for that sender. </p>
+                <p>These rules greatly reduce the ‘noise’ in my Inbox.</p>
+                <p>Then with each email in my inbox, I review for action. If there is no action for me, I manually move
+                  it to my Archive folder or delete it. As I complete the required action, I move the email to the
+                  Archive folder. (It’s a good feeling.) If no action is required within the next 24 hours, I’ll set the
+                  Follow-Up flag and move it to the Archive folder. I then periodically check my Tasks list where this
+                  pending action will be listed.</p>
+                <h2 id="PERIODIC-REVIEW"><a href="#PERIODIC-REVIEW" class="headerlink"
+                    title="PERIODIC REVIEW"></a>PERIODIC REVIEW</h2>
+                <p>I get added to aliases all the time in the course of my job – sometimes without knowing ahead of
+                  time. Since all of my email will be moved to my Inbox2, unless I have a rule setup, I need to
+                  periodically check this folder to make sure I’m not missing anything. If I do miss an email, I’ll
+                  create a rule (and folder if necessary) to make sure I don’t miss it in the future. I also will also
+                  unsubscribe from aliases and delete email during this review.</p>
+                <h2 id="IT-WORKS-FOR-ME"><a href="#IT-WORKS-FOR-ME" class="headerlink" title="IT WORKS FOR ME"></a>IT
+                  WORKS FOR ME</h2>
+                <p>I know there are a lot of ‘zero-inbox’ methods out there. This one works for me in my particular work
+                  environment where a lot of email is sent to aliases. Please let me know what you are using. </p>
+                <p>Mike</p>
+
+
+              </div>
+              <footer class="article-footer">
+                <a data-url="http://www.mjfnet.com/2019/01/10/A-Zero-Inbox-Solution/"
+                  data-id="ck3evg1nz0001csiwjeaw01jy" data-title="A Zero Inbox Solution"
+                  class="article-share-link">Share</a>
+
+                <a href="http://www.mjfnet.com/2019/01/10/A-Zero-Inbox-Solution/#disqus_thread"
+                  class="article-comment-link">Comments</a>
+
+
+
+              </footer>
+            </div>
+
+          </article>
+
+
+
+
+
+
+        </section>
+
+        <aside id="sidebar">
+
+
+          <div class="widget-wrap">
+            <h3 class="widget-title">Categories</h3>
+            <div class="widget">
+              <ul class="category-list">
+                <li class="category-list-item"><a class="category-list-link" href="/categories/Developer/">Developer</a>
+                </li>
+                <li class="category-list-item"><a class="category-list-link"
+                    href="/categories/Productivity/">Productivity</a></li>
+              </ul>
+            </div>
+          </div>
+
+
+
+
+          <div class="widget-wrap">
+            <h3 class="widget-title">Tags</h3>
+            <div class="widget">
+              <ul class="tag-list">
+                <li class="tag-list-item"><a class="tag-list-link" href="/tags/MSIX-UWP-PackageManager/">MSIX, UWP,
+                    PackageManager</a></li>
+              </ul>
+            </div>
+          </div>
+
+
+
+
+          <div class="widget-wrap">
+            <h3 class="widget-title">Tag Cloud</h3>
+            <div class="widget tagcloud">
+              <a href="/tags/MSIX-UWP-PackageManager/" style="font-size: 10px;">MSIX, UWP, PackageManager</a>
+            </div>
+          </div>
+
+
+
+          <div class="widget-wrap">
+            <h3 class="widget-title">Archives</h3>
+            <div class="widget">
+              <ul class="archive-list">
+                <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a>
+                </li>
+                <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+
+
+
+          <div class="widget-wrap">
+            <h3 class="widget-title">Recent Posts</h3>
+            <div class="widget">
+              <ul>
+
+                <li>
+                  <a href="/2019/11/15/How-to-detect-if-a-Microsoft-Store-app-is-Installed/">How to detect if a
+                    Microsoft Store app is Installed</a>
+                </li>
+
+                <li>
+                  <a href="/2019/01/10/A-Zero-Inbox-Solution/">A Zero Inbox Solution</a>
+                </li>
+
+              </ul>
+            </div>
+          </div>
+
+
+        </aside>
+
+      </div>
+      <footer id="footer">
+
+        <div class="outer">
+          <div id="footer-info" class="inner">
+            &copy; 2019 Mike Francis<br>
+            Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+    <nav id="mobile-nav">
+
+      <a href="/" class="mobile-nav-link">Home</a>
+
+      <a href="/archives" class="mobile-nav-link">Archives</a>
+
+    </nav>
+
+    <script>
+      var disqus_shortname = 'mymobilehome';
+
+      (function () {
+        var dsq = document.createElement('script');
+        dsq.async = true;
+        dsq.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+
+
+    <script src="/js/jquery-3.4.1.min.js"></script>
+
+
+    <script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+    <script src="/js/script.js"></script>
+
+    <script>
+      function openForm() {
+        document.getElementById("myForm").style.display = "block";
+      }
+      function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+      }
+    </script>
+  </div>
+
+  <button onclick="openForm()" class="open-button">Chat</button>
+  <div id="myForm" class="chat-popup">
+    <iframe src="BotPage.html" frameborder="0" style="width: 100%; height: 100%; background: #FFFFFF;"></iframe>
+    <button onclick="closeForm()" class="closePopUp">X</button>
+  </div>
+
+</body>
+
+</html>
