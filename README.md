@@ -1,4 +1,4 @@
-# Sample: Chat Bot customization - Power Virtual Agents / Bot FrameworkIntroduction
+# Sample: Chat Bot customization - Power Virtual Agents / Bot Framework
 
 ## Introduction
 
